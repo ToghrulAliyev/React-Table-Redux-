@@ -1,25 +1,41 @@
-import logo from './logo.svg';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import './App.css';
+import TableComponent from './components/TableComponent';
+import { loadUsersAsync } from './redux/reducers/users/users.thunks';
+import { loadUser } from './redux/reducers/users/users.thunks';
+
 
 function App() {
+
+  const dispatch = useDispatch()
+  const { isLoading, users, errorMessage } = useSelector(state => state.users)
+
+
+
+  useEffect(() => {
+
+    dispatch(loadUsersAsync())
+    
+  }, [])
+
+  console.log("user", users?.data)
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      {isLoading ? <div className='loading'> Loading... </div>
+      :
+       <div className="App">
+        <TableComponent usersInfo={users} isLoading={isLoading} />
+      </div>
+    }
+    </>
   );
 }
 
 export default App;
+
+
+
+// {isLoading && <div> Loading... </div> }
+// {errorMessage && <div>Error Occured</div> }
